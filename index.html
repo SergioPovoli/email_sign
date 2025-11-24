@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="it">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Generatore Firma Email - Comune di Vallelaghi</title>
+    <style>
+        :root {
+            --primary-color: #0056b3;
+            --bg-color: #f4f7f6;
+            --card-bg: #ffffff;
+            --text-color: #333;
+            --border-radius: 12px;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 2rem;
+            max-width: 1200px;
+            width: 95%;
+            margin: 2rem auto;
+        }
+
+        .card {
+            background: var(--card-bg);
+            padding: 2rem;
+            border-radius: var(--border-radius);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
+            flex: 1;
+            min-width: 300px;
+        }
+
+        h1 {
+            text-align: center;
+            color: var(--primary-color);
+            margin-bottom: 2rem;
+            width: 100%;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: #555;
+        }
+
+        input {
+            width: 100%;
+            padding: 0.8rem;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: border-color 0.3s;
+            box-sizing: border-box;
+        }
+
+        input:focus {
+            border-color: var(--primary-color);
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(0, 86, 179, 0.1);
+        }
+
+        .preview-container {
+            background: #fff;
+            border: 1px dashed #ccc;
+            padding: 2rem;
+            border-radius: var(--border-radius);
+            margin-top: 1rem;
+            overflow-x: auto;
+        }
+
+        .btn {
+            display: block;
+            width: 100%;
+            padding: 1rem;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.1s;
+            margin-top: 2rem;
+        }
+
+        .btn:hover {
+            background-color: #004494;
+        }
+
+        .btn:active {
+            transform: scale(0.98);
+        }
+
+        /* Signature Styles - Inline for Email Compatibility */
+        .signature-table {
+            font-family: Arial, Helvetica, sans-serif;
+            font-size: 10pt;
+            color: #333333;
+            line-height: 1.3;
+        }
+
+        .signature-link {
+            color: #0056b3;
+            text-decoration: none;
+        }
+
+        .signature-link:hover {
+            text-decoration: underline;
+        }
+
+        footer {
+            text-align: center;
+            padding: 1.5rem;
+            color: #666;
+            font-size: 0.9rem;
+            width: 100%;
+            margin-top: 2rem;
+        }
+
+        footer .heart {
+            color: #e74c3c;
+            font-size: 1rem;
+            display: inline-block;
+            animation: heartbeat 1.5s ease-in-out infinite;
+        }
+
+        @keyframes heartbeat {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+        <h1>Generatore Firma Email - Comune di Vallelaghi</h1>
+
+        <div class="card">
+            <h2>Inserisci i tuoi dati</h2>
+            <form id="signatureForm">
+                <div class="form-group">
+                    <label for="name">Nome</label>
+                    <input type="text" id="name" placeholder="Mario" oninput="updateSignature()">
+                </div>
+                <div class="form-group">
+                    <label for="surname">Cognome</label>
+                    <input type="text" id="surname" placeholder="Rossi" oninput="updateSignature()">
+                </div>
+                <div class="form-group">
+                    <label for="role">Ruolo</label>
+                    <input type="text" id="role" placeholder="Responsabile Amministrativo" oninput="updateSignature()">
+                </div>
+                <div class="form-group">
+                    <label for="department">Ufficio / Altro</label>
+                    <input type="text" id="department" placeholder="Ufficio Tecnico" oninput="updateSignature()">
+                </div>
+            </form>
+        </div>
+
+        <div class="card">
+            <h2>Anteprima Firma</h2>
+            <p style="font-size: 0.9rem; color: #666; margin-bottom: 1rem;">
+                Compila il modulo a sinistra, poi clicca su "Copia Firma" e incollala nelle impostazioni di Gmail.
+            </p>
+
+            <div class="preview-container" id="signaturePreview">
+                <!-- Signature Start -->
+                <table class="signature-table" cellpadding="0" cellspacing="0" border="0"
+                    style="font-family: Arial, sans-serif; font-size: 13px; color: #000000;">
+                    <tr>
+                        <td style="padding-right: 15px; vertical-align: top;">
+                            <a href="https://www.comune.vallelaghi.tn.it/" target="_blank">
+                                <img src="https://www.regione.taa.it/var/opencitytaa/storage/images/amministrazione/enti-comuni-fondazioni-e-societa/comune-di-vallelaghi/79821-13-ita-IT/Comune-di-Vallelaghi_reference.jpg"
+                                    alt="Stemma Comune di Vallelaghi" width="100" style="display: block; border: 0;">
+                            </a>
+                        </td>
+                        <td style="border-left: 1px solid #cccccc; padding-left: 15px; vertical-align: top;">
+                            <div style="margin-bottom: 4px;">
+                                <strong style="font-size: 16px; color: #000000;"><span id="sig-name">Nome</span> <span
+                                        id="sig-surname">Cognome</span></strong>
+                            </div>
+                            <div style="margin-bottom: 10px; color: #555555;">
+                                <span id="sig-role" style="font-style: italic; display: block;">Ruolo</span>
+                                <span id="sig-department" style="display: block; margin-top: 4px;">Ufficio /
+                                    Altro</span>
+                            </div>
+
+                            <div style="margin-bottom: 4px;">
+                                <strong style="text-transform: uppercase; color: #000000;">COMUNE DI VALLELAGHI</strong>
+                            </div>
+                            <div style="color: #333333; margin-bottom: 8px;">
+                                Via Roma, 41 (Vezzano) - 38096 VALLELAGHI (TN)<br>
+                                P.IVA 02401940222
+                            </div>
+
+                            <div>
+                                <a href="https://www.comune.vallelaghi.tn.it/" class="signature-link">Sito Web</a> |
+                                <a href="mailto:info@pec.comune.vallelaghi.tn.it" class="signature-link">PEC</a> |
+                                <a href="mailto:Info@comune.vallelaghi.tn.it" class="signature-link">e-Mail</a>
+                            </div>
+                        </td>
+                    </tr>
+                </table>
+                <!-- Signature End -->
+            </div>
+
+            <button class="btn" onclick="copySignature()">Copia Firma</button>
+            <p id="copyMessage"
+                style="text-align: center; color: green; margin-top: 10px; opacity: 0; transition: opacity 0.5s;">Firma
+                copiata negli appunti!</p>
+        </div>
+    </div>
+    <footer>
+        Made with <span class="heart">❤️</span> by Sergio Povoli
+    </footer>
+
+    <script>
+        function updateSignature() {
+            const name = document.getElementById('name').value || 'Nome';
+            const surname = document.getElementById('surname').value || 'Cognome';
+            const role = document.getElementById('role').value || 'Ruolo';
+            const department = document.getElementById('department').value || 'Ufficio / Altro';
+
+            document.getElementById('sig-name').textContent = name;
+            document.getElementById('sig-surname').textContent = surname;
+            document.getElementById('sig-role').textContent = role;
+            document.getElementById('sig-department').textContent = department;
+        }
+
+        function copySignature() {
+            const signatureNode = document.querySelector('.preview-container');
+            const range = document.createRange();
+            const selection = window.getSelection();
+
+            selection.removeAllRanges();
+            range.selectNodeContents(signatureNode);
+            selection.addRange(range);
+
+            try {
+                document.execCommand('copy');
+                const msg = document.getElementById('copyMessage');
+                msg.style.opacity = '1';
+                setTimeout(() => {
+                    msg.style.opacity = '0';
+                }, 2000);
+            } catch (err) {
+                console.error('Impossibile copiare la firma', err);
+                alert('Errore durante la copia. Prova a selezionare e copiare manualmente.');
+            }
+
+            selection.removeAllRanges();
+        }
+
+        // Initialize with default values
+        updateSignature();
+    </script>
+</body>
+
+</html>
