@@ -51,6 +51,43 @@
             border-radius: var(--border-radius);
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
             font-size: 0.95rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .info-card:hover {
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+        }
+
+        .info-card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            user-select: none;
+        }
+
+        .info-card-arrow {
+            transition: transform 0.3s ease;
+            font-size: 1.2rem;
+            color: var(--primary-color);
+        }
+
+        .info-card-arrow.collapsed {
+            transform: rotate(-90deg);
+        }
+
+        .info-card-content {
+            max-height: 500px;
+            overflow: hidden;
+            transition: max-height 0.3s ease, opacity 0.3s ease, margin-top 0.3s ease;
+            opacity: 1;
+            margin-top: 0.5rem;
+        }
+
+        .info-card-content.collapsed {
+            max-height: 0;
+            opacity: 0;
+            margin-top: 0;
         }
 
         h1 {
@@ -192,13 +229,19 @@
 
     <div class="container">
         <h1>Generatore Firma Email - Comune di Vallelaghi</h1>
-        <div class="info-card" style="margin-bottom: 1rem; text-align: center; color: #555;">
-            <p>
-                Usa questo strumento per creare la tua firma email conforme agli standard del Comune di Vallelaghi. <br>
-                Compila i campi sottostanti e copia la firma generata. <br> 
-                Non sai come aggiungerla a Gmail?  <a href="https://support.google.com/mail/answer/8395?hl=it&co=GENIE.Platform%3DDesktop#zippy=%2Cmodificare-le-firme" target="_blank" style="color: var(--primary-color); text-decoration: none;">Clicca qui per la guida</a>. <br>
-                Non sai come aggiungerla a Outlook? <a href="https://support.microsoft.com/it-it/office/modifica-della-firma-di-posta-elettronica-86597769-e4df-4320-b219-39d6e1a9e87b" target="_blank" style="color: var(--primary-color); text-decoration: none;">Clicca qui per la guida</a>.
-            </p>
+        <div class="info-card" onclick="toggleInfoCard()" style="margin-bottom: 1rem;">
+            <div class="info-card-header">
+                <strong style="color: #333;">ℹ️ Informazioni e Guide</strong>
+                <span class="info-card-arrow" id="infoArrow">▼</span>
+            </div>
+            <div class="info-card-content" id="infoContent" style="text-align: center; color: #555;">
+                <p>
+                    Usa questo strumento per creare la tua firma email conforme agli standard del Comune di Vallelaghi. <br>
+                    Compila i campi sottostanti e copia la firma generata. <br> 
+                    Non sai come aggiungerla a Gmail?  <a href="https://support.google.com/mail/answer/8395?hl=it&co=GENIE.Platform%3DDesktop#zippy=%2Cmodificare-le-firme" target="_blank" style="color: var(--primary-color); text-decoration: none;">Clicca qui per la guida</a>. <br>
+                    Non sai come aggiungerla a Outlook? <a href="https://support.microsoft.com/it-it/office/modifica-della-firma-di-posta-elettronica-86597769-e4df-4320-b219-39d6e1a9e87b" target="_blank" style="color: var(--primary-color); text-decoration: none;">Clicca qui per la guida</a>.
+                </p>
+            </div>
         </div>
 
         <div class="card">
@@ -222,9 +265,23 @@
                 <div class="form-group">
                     <div class="toggle-container">
                         <input type="checkbox" id="departmentToggle" onchange="toggleField('department')" checked>
-                        <label for="departmentToggle">Includi Ufficio / Altro</label>
+                        <label for="departmentToggle">Qui puoi includere: Ufficio / Deleghe / Altro</label>
                     </div>
                     <input type="text" id="department" placeholder="Ufficio Tecnico" oninput="updateSignature()">
+                </div>
+                <div class="form-group">
+                    <div class="toggle-container">
+                        <input type="checkbox" id="phoneToggle" onchange="toggleField('phone')">
+                        <label for="phoneToggle">Includi Numero di Telefono</label>
+                    </div>
+                    <input type="text" id="phone" placeholder="+39 123 456 7890" oninput="updateSignature()" disabled>
+                </div>
+                <div class="form-group">
+                    <div class="toggle-container">
+                        <input type="checkbox" id="personalEmailToggle" onchange="toggleField('personalEmail')">
+                        <label for="personalEmailToggle">Includi Email Personale</label>
+                    </div>
+                    <input type="email" id="personalEmail" placeholder="mario.rossi@comune.vallelaghi.tn.it" oninput="updateSignature()" disabled>
                 </div>
                 <div class="form-group">
                     <div class="toggle-container">
@@ -246,7 +303,7 @@
                 <table class="signature-table" cellpadding="0" cellspacing="0" border="0"
                     style="font-family: Arial, sans-serif; font-size: 13px; color: #000000;">
                     <tr>
-                        <td style="padding-right: 15px; vertical-align: top;">
+                        <td style="padding-right: 15px; vertical-align: middle;">
                             <a href="https://www.comune.vallelaghi.tn.it/" target="_blank">
                                 <img src="https://www.regione.taa.it/var/opencitytaa/storage/images/amministrazione/enti-comuni-fondazioni-e-societa/comune-di-vallelaghi/79821-13-ita-IT/Comune-di-Vallelaghi_reference.jpg"
                                     alt="Stemma Comune di Vallelaghi" width="120" style="display: block; border: 0;">
@@ -259,19 +316,24 @@
                             </div>
                             <div style="margin-bottom: 10px; color: #555555;">
                                 <span id="sig-role" style="font-style: italic; display: block;">Ruolo</span>
-                                <span id="sig-department" style="display: block; margin-top: 4px;">Ufficio /
+                                <span id="sig-department" style="display: block; margin-top: 4px;">Ufficio / Deleghe /
                                     Altro</span>
                             </div>
 
-                            <div style="margin-bottom: 4px;">
-                                <strong style="text-transform: uppercase; color: #000000;">COMUNE DI VALLELAGHI</strong>
+                            <div id="sig-contact-info" style="margin-bottom: 8px; color: #333333;">
+                                <span id="sig-phone" style="display: none;">Tel: <span id="sig-phone-number"></span><br></span>
+                                <span id="sig-personalEmail" style="display: none;">Email: <span id="sig-personalEmail-address"></span><br></span>
                             </div>
-                            <div style="color: #333333; margin-bottom: 8px;">
+
+                            <div style="margin-bottom: 4px;">
+                                <strong style="text-transform: uppercase; color: #000000; font-size: 11px;">COMUNE DI VALLELAGHI</strong>
+                            </div>
+                            <div style="color: #333333; margin-bottom: 8px; font-size: 10px;">
                                 Via Roma, 41 (Vezzano) - 38096 VALLELAGHI (TN)<br>
                                 P.IVA 02401940222
                             </div>
 
-                            <div>
+                            <div style="font-size: 10px;">
                                 <a href="https://www.comune.vallelaghi.tn.it/" class="signature-link">Sito Web</a> |
                                 <a href="mailto:info@pec.comune.vallelaghi.tn.it" class="signature-link">PEC</a> |
                                 <a href="mailto:Info@comune.vallelaghi.tn.it" class="signature-link">e-Mail</a>
@@ -300,6 +362,14 @@
 
 
     <script>
+        function toggleInfoCard() {
+            const content = document.getElementById('infoContent');
+            const arrow = document.getElementById('infoArrow');
+            
+            content.classList.toggle('collapsed');
+            arrow.classList.toggle('collapsed');
+        }
+
         function toggleField(fieldName) {
             const toggle = document.getElementById(fieldName + 'Toggle');
             const sigElement = document.getElementById('sig-' + fieldName);
@@ -315,7 +385,7 @@
                 const input = document.getElementById(fieldName);
                 if (toggle.checked) {
                     input.disabled = false;
-                    sigElement.style.display = 'block';
+                    sigElement.style.display = 'inline';
                     updateSignature();
                 } else {
                     input.disabled = true;
@@ -342,8 +412,22 @@
             // Update department if enabled
             const departmentToggle = document.getElementById('departmentToggle');
             if (departmentToggle.checked) {
-                const department = document.getElementById('department').value || 'Ufficio / Altro';
+                const department = document.getElementById('department').value || 'Ufficio / Deleghe / Altro';
                 document.getElementById('sig-department').textContent = department;
+            }
+
+            // Update phone if enabled
+            const phoneToggle = document.getElementById('phoneToggle');
+            if (phoneToggle.checked) {
+                const phone = document.getElementById('phone').value || '';
+                document.getElementById('sig-phone-number').textContent = phone;
+            }
+
+            // Update personal email if enabled
+            const personalEmailToggle = document.getElementById('personalEmailToggle');
+            if (personalEmailToggle.checked) {
+                const personalEmail = document.getElementById('personalEmail').value || '';
+                document.getElementById('sig-personalEmail-address').textContent = personalEmail;
             }
         }
 
