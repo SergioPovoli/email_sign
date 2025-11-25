@@ -90,6 +90,76 @@
             margin-top: 0;
         }
 
+        .signature-type-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 1rem;
+            margin-top: 1rem;
+            padding: 1.5rem;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            border-radius: var(--border-radius);
+        }
+
+        .signature-type-switch {
+            position: relative;
+            display: inline-block;
+            width: 80px;
+            height: 40px;
+        }
+
+        .signature-type-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #0056b3;
+            transition: 0.4s;
+            border-radius: 40px;
+        }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 32px;
+            width: 32px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            transition: 0.4s;
+            border-radius: 50%;
+        }
+
+        input:checked + .slider {
+            background-color: #28a745;
+        }
+
+        input:checked + .slider:before {
+            transform: translateX(40px);
+        }
+
+        .signature-type-label {
+            font-weight: 600;
+            font-size: 1.1rem;
+            color: #333;
+            min-width: 120px;
+            text-align: center;
+            transition: all 0.3s;
+        }
+
+        .signature-type-label.active {
+            color: var(--primary-color);
+            transform: scale(1.1);
+        }
+
         h1 {
             text-align: center;
             color: var(--primary-color);
@@ -237,7 +307,9 @@
             <div class="info-card-content" id="infoContent" style="text-align: center; color: #555;">
                 <p>
                     Usa questo strumento per creare la tua firma email conforme agli standard del Comune di Vallelaghi. <br>
-                    Compila i campi sottostanti e copia la firma generata. <br> 
+                    Compila i campi sottostanti e scegli il tipo di firma da generare. <br><br>
+                    <strong>📧 Firma Completa:</strong> ideale per nuove email e comunicazioni ufficiali.<br>
+                    <strong>✉️ Firma Breve:</strong> perfetta per risposte e inoltri rapidi.<br><br>
                     Non sai come aggiungerla a Gmail?  <a href="https://support.google.com/mail/answer/8395?hl=it&co=GENIE.Platform%3DDesktop#zippy=%2Cmodificare-le-firme" target="_blank" style="color: var(--primary-color); text-decoration: none;">Clicca qui per la guida</a>. <br>
                     Non sai come aggiungerla a Outlook? <a href="https://support.microsoft.com/it-it/office/modifica-della-firma-di-posta-elettronica-86597769-e4df-4320-b219-39d6e1a9e87b" target="_blank" style="color: var(--primary-color); text-decoration: none;">Clicca qui per la guida</a>.
                 </p>
@@ -287,6 +359,17 @@
                     <div class="toggle-container">
                         <input type="checkbox" id="privacyToggle" onchange="toggleField('privacy')">
                         <label for="privacyToggle">Includi Informativa Privacy</label>
+                    </div>
+                </div>
+                <div class="form-group" style="border-top: 2px solid #e0e0e0; padding-top: 1.5rem; margin-top: 2rem;">
+                    <label style="font-size: 1.1rem; color: var(--primary-color); text-align: center; display: block; margin-bottom: 1rem;">⚙️ Seleziona Tipo di Firma</label>
+                    <div class="signature-type-container">
+                        <span class="signature-type-label" id="labelComplete">📧 Firma Completa</span>
+                        <label class="signature-type-switch">
+                            <input type="checkbox" id="signatureTypeSwitch" onchange="switchSignatureType()">
+                            <span class="slider"></span>
+                        </label>
+                        <span class="signature-type-label" id="labelShort">✉️ Firma Breve</span>
                     </div>
                 </div>
             </form>
@@ -350,6 +433,44 @@
                 <!-- Signature End -->
             </div>
 
+            <div class="preview-container" id="signaturePreviewShort" style="display: none;">
+                <!-- Short Signature Start -->
+                <table class="signature-table" cellpadding="0" cellspacing="0" border="0"
+                    style="font-family: Arial, sans-serif; font-size: 12px; color: #000000;">
+                    <tr>
+                        <td style="padding-right: 10px; vertical-align: middle;">
+                            <a href="https://www.comune.vallelaghi.tn.it/" target="_blank">
+                                <img src="https://www.regione.taa.it/var/opencitytaa/storage/images/amministrazione/enti-comuni-fondazioni-e-societa/comune-di-vallelaghi/79821-13-ita-IT/Comune-di-Vallelaghi_reference.jpg"
+                                    alt="Stemma Comune di Vallelaghi" width="50" style="display: block; border: 0;">
+                            </a>
+                        </td>
+                        <td style="vertical-align: middle;">
+                            <div style="margin-bottom: 2px;">
+                                <strong style="font-size: 13px; color: #000000;">
+                                    <span id="sig-short-name">Nome</span> <span id="sig-short-surname">Cognome</span>
+                                </strong>
+                            </div>
+                            <div style="color: #555555; font-size: 11px;">
+                                <span id="sig-short-role" style="font-style: italic;">Ruolo</span>
+                            </div>
+                            <div id="sig-short-phone" style="display: none; color: #333333; font-size: 10px; margin-top: 2px;">
+                                Tel: <span id="sig-short-phone-number"></span>
+                            </div>
+                            <div style="margin-top: 4px; font-size: 9px;">
+                                <strong style="text-transform: uppercase; color: #000000;">COMUNE DI VALLELAGHI</strong>
+                            </div>
+                        </td>
+                    </tr>
+                </table>
+                
+                <div id="sig-short-privacy" style="display: none; margin-top: 15px; padding-top: 10px; border-top: 1px solid #cccccc; font-size: 8px; color: #666666; line-height: 1.3;">
+                    <strong>Informativa Privacy</strong><br>
+                    I dati contenuti nella presente e-mail sono raccolti e trattati nel rispetto del Regolamento UE 2016/679 (GDPR). Gli interessati possono rivolgersi in qualsiasi momento al Titolare del trattamento, Comune di Vallelaghi, per esercitare i diritti previsti dal GDPR. I dati di contatto del RPD e del Titolare oltre che l'informativa completa sono disponibili al link <a href="http://www.comune.vallelaghi.tn.it" style="color: #0056b3; text-decoration: none;">www.comune.vallelaghi.tn.it</a> sotto la voce "Privacy".<br><br>
+                    Si precisa inoltre che le informazioni contenute nel presente messaggio, e negli eventuali allegati, sono riservate e per uso esclusivo del destinatario. In caso di ricezione dello stesso per errore, siete pregati di informare immediatamente il mittente e di cancellarlo dal vostro archivio, in conformità con quanto disposto dall'art. 17 del GDPR. Ogni trattamento della presente mail che non sia quello del destinatario reale è inteso come non autorizzato dal mittente. Inoltre, in quanto non destinatari reali, Vi informiamo che il mittente si oppone alla copia, la diffusione e la rivelazione anche parziale dei dati in esso contenuti alle persone non autorizzate dal medesimo, in virtù di quanto disposto dall'art. 21 del GDPR.
+                </div>
+                <!-- Short Signature End -->
+            </div>
+
             <button class="btn" onclick="copySignature()">Copia Firma</button>
             <p id="copyMessage"
                 style="text-align: center; color: green; margin-top: 10px; opacity: 0; transition: opacity 0.5s;">Firma
@@ -370,6 +491,29 @@
             arrow.classList.toggle('collapsed');
         }
 
+        function switchSignatureType() {
+            const switchInput = document.getElementById('signatureTypeSwitch');
+            const completePreview = document.getElementById('signaturePreview');
+            const shortPreview = document.getElementById('signaturePreviewShort');
+            const labelComplete = document.getElementById('labelComplete');
+            const labelShort = document.getElementById('labelShort');
+            
+            if (switchInput.checked) {
+                // Firma breve
+                completePreview.style.display = 'none';
+                shortPreview.style.display = 'block';
+                labelComplete.classList.remove('active');
+                labelShort.classList.add('active');
+            } else {
+                // Firma completa
+                completePreview.style.display = 'block';
+                shortPreview.style.display = 'none';
+                labelComplete.classList.add('active');
+                labelShort.classList.remove('active');
+            }
+            updateSignature();
+        }
+
         function toggleField(fieldName) {
             const toggle = document.getElementById(fieldName + 'Toggle');
             const sigElement = document.getElementById('sig-' + fieldName);
@@ -378,19 +522,27 @@
                 // Privacy doesn't have an input field
                 if (toggle.checked) {
                     sigElement.style.display = 'block';
+                    document.getElementById('sig-short-privacy').style.display = 'block';
                 } else {
                     sigElement.style.display = 'none';
+                    document.getElementById('sig-short-privacy').style.display = 'none';
                 }
             } else {
                 const input = document.getElementById(fieldName);
                 if (toggle.checked) {
                     input.disabled = false;
                     sigElement.style.display = 'inline';
+                    if (fieldName === 'phone') {
+                        document.getElementById('sig-short-phone').style.display = 'block';
+                    }
                     updateSignature();
                 } else {
                     input.disabled = true;
                     input.value = '';
                     sigElement.style.display = 'none';
+                    if (fieldName === 'phone') {
+                        document.getElementById('sig-short-phone').style.display = 'none';
+                    }
                 }
             }
         }
@@ -399,14 +551,20 @@
             const name = document.getElementById('name').value || 'Nome';
             const surname = document.getElementById('surname').value || 'Cognome';
             
+            // Update complete signature
             document.getElementById('sig-name').textContent = name;
             document.getElementById('sig-surname').textContent = surname;
+            
+            // Update short signature
+            document.getElementById('sig-short-name').textContent = name;
+            document.getElementById('sig-short-surname').textContent = surname;
             
             // Update role if enabled
             const roleToggle = document.getElementById('roleToggle');
             if (roleToggle.checked) {
                 const role = document.getElementById('role').value || 'Ruolo';
                 document.getElementById('sig-role').textContent = role;
+                document.getElementById('sig-short-role').textContent = role;
             }
             
             // Update department if enabled
@@ -421,6 +579,7 @@
             if (phoneToggle.checked) {
                 const phone = document.getElementById('phone').value || '';
                 document.getElementById('sig-phone-number').textContent = phone;
+                document.getElementById('sig-short-phone-number').textContent = phone;
             }
 
             // Update personal email if enabled
@@ -432,7 +591,11 @@
         }
 
         function copySignature() {
-            const signatureNode = document.querySelector('.preview-container');
+            const switchInput = document.getElementById('signatureTypeSwitch');
+            const signatureNode = switchInput.checked
+                ? document.getElementById('signaturePreviewShort')
+                : document.getElementById('signaturePreview');
+            
             const range = document.createRange();
             const selection = window.getSelection();
 
@@ -457,6 +620,7 @@
 
         // Initialize with default values
         updateSignature();
+        document.getElementById('labelComplete').classList.add('active');
     </script>
 </body>
 
