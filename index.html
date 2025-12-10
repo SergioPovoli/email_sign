@@ -301,7 +301,21 @@
 <body>
 
     <div class="container">
-        <h1>Generatore Firma Email - Comune di Vallelaghi</h1>
+        <h1 id="pageTitle">Generatore Firma Email - Comune di Vallelaghi</h1>
+        
+        <!-- Selettore Tipo Ente -->
+        <div class="card" style="padding: 1.5rem;">
+            <label style="font-size: 1.1rem; color: var(--primary-color); text-align: center; display: block; margin-bottom: 1rem;">🏛️ Seleziona Tipo di Ente</label>
+            <div class="signature-type-container">
+                <span class="signature-type-label active" id="labelComune">🏛️ Comune</span>
+                <label class="signature-type-switch">
+                    <input type="checkbox" id="entityTypeSwitch" onchange="switchEntityType()">
+                    <span class="slider"></span>
+                </label>
+                <span class="signature-type-label" id="labelCustode">🌲 Custode Forestale</span>
+            </div>
+        </div>
+        
         <div class="info-card" onclick="toggleInfoCard()" style="margin-bottom: 1rem;">
             <div class="info-card-header">
                 <strong style="color: #333;">ℹ️ Informazioni e Guide</strong>
@@ -327,7 +341,7 @@
         </div>
 
         <div class="card">
-            <h2>Inserisci i tuoi dati</h2>
+            <h2 id="formTitle">Inserisci i tuoi dati</h2>
             <form id="signatureForm">
                 <div class="form-group">
                     <label for="name">Nome</label>
@@ -344,12 +358,20 @@
                     </div>
                     <input type="text" id="role" placeholder="Responsabile Amministrativo" oninput="updateSignature()">
                 </div>
-                <div class="form-group">
+                <div class="form-group" id="departmentGroup">
                     <div class="toggle-container">
                         <input type="checkbox" id="departmentToggle" onchange="toggleField('department')" checked>
-                        <label for="departmentToggle">Qui puoi includere: Ufficio / Deleghe / Altro</label>
+                        <label for="departmentToggle" id="departmentLabel">Qui puoi includere: Ufficio / Deleghe / Altro</label>
                     </div>
                     <input type="text" id="department" placeholder="Ufficio Tecnico" oninput="updateSignature()">
+                </div>
+                <div class="form-group" id="serviceGroup" style="display: none;">
+                    <label for="service">Servizio</label>
+                    <input type="text" id="service" placeholder="Servizio Custodia Forestale" value="Servizio Custodia Forestale" oninput="updateSignature()">
+                </div>
+                <div class="form-group" id="locationGroup" style="display: none;">
+                    <label for="location">Località</label>
+                    <input type="text" id="location" placeholder="Valle dei Laghi (TN)" value="Valle dei Laghi (TN)" oninput="updateSignature()">
                 </div>
                 <div class="form-group">
                     <div class="toggle-container">
@@ -463,6 +485,59 @@
                 <!-- Signature End -->
             </div>
 
+            <!-- Custode Forestale Signature -->
+            <div class="preview-container" id="signaturePreviewCustode" style="display: none;">
+                <table class="signature-table" cellpadding="0" cellspacing="0" border="0"
+                    style="font-family: Arial, sans-serif; font-size: 13px; color: #000000;">
+                    <tr>
+                        <td style="padding-right: 15px; vertical-align: middle;">
+                            <img src="https://raw.githubusercontent.com/SergioPovoli/email_sign/main/Custodia-Forestale_reference.png"
+                                alt="Logo Custode Forestale" width="120" style="display: block; border: 0;">
+                        </td>
+                        <td style="border-left: 1px solid #cccccc; padding-left: 15px; vertical-align: top;">
+                            <div style="margin-bottom: 4px;">
+                                <strong style="font-size: 16px; color: #000000;">
+                                    <span id="sig-custode-name">Nome</span> <span id="sig-custode-surname">Cognome</span>
+                                </strong>
+                            </div>
+                            <div style="margin-bottom: 10px; color: #555555;">
+                                <span id="sig-custode-role" style="font-style: italic; display: block;">Ruolo</span>
+                            </div>
+
+                            <div id="sig-custode-contact-info" style="margin-bottom: 10px; color: #333333;">
+                                <span id="sig-custode-phone" style="display: none;">Tel: <span
+                                        id="sig-custode-phone-number"></span><br></span>
+                                <span id="sig-custode-personalEmail" style="display: none;">Email: <span
+                                        id="sig-custode-personalEmail-address"></span><br></span>
+                            </div>
+
+                            <div style="margin-bottom: 4px;">
+                                <strong style="color: #000000; font-size: 14px;"><span id="sig-custode-service">Servizio Custodia Forestale</span></strong>
+                            </div>
+                            <div style="color: #333333; margin-bottom: 8px; font-size: 12px;">
+                                <span id="sig-custode-location">Valle dei Laghi (TN)</span>
+                            </div>
+                        </td>
+                    </tr>
+                </table>
+
+                <div id="sig-custode-privacy"
+                    style="display: none; margin-top: 20px; padding-top: 15px; border-top: 1px solid #cccccc; font-size: 9px; color: #666666; line-height: 1.4;">
+                    <strong>Informativa Privacy</strong><br>
+                    I dati contenuti nella presente e-mail sono raccolti e trattati nel rispetto del Regolamento UE
+                    2016/679 (GDPR). Gli interessati possono rivolgersi in qualsiasi momento al Titolare del
+                    trattamento per esercitare i diritti previsti dal GDPR.<br><br>
+                    Si precisa inoltre che le informazioni contenute nel presente messaggio, e negli eventuali allegati,
+                    sono riservate e per uso esclusivo del destinatario. In caso di ricezione dello stesso per errore,
+                    siete pregati di informare immediatamente il mittente e di cancellarlo dal vostro archivio, in
+                    conformità con quanto disposto dall'art. 17 del GDPR. Ogni trattamento della presente mail che non
+                    sia quello del destinatario reale è inteso come non autorizzato dal mittente. Inoltre, in quanto non
+                    destinatari reali, Vi informiamo che il mittente si oppone alla copia, la diffusione e la
+                    rivelazione anche parziale dei dati in esso contenuti alle persone non autorizzate dal medesimo, in
+                    virtù di quanto disposto dall'art. 21 del GDPR.
+                </div>
+            </div>
+
             <div class="preview-container" id="signaturePreviewShort" style="display: none;">
                 <!-- Short Signature Start -->
                 <table class="signature-table" cellpadding="0" cellspacing="0" border="0"
@@ -516,6 +591,53 @@
                 <!-- Short Signature End -->
             </div>
 
+            <!-- Custode Forestale Short Signature -->
+            <div class="preview-container" id="signaturePreviewCustodeShort" style="display: none;">
+                <table class="signature-table" cellpadding="0" cellspacing="0" border="0"
+                    style="font-family: Arial, sans-serif; font-size: 12px; color: #000000;">
+                    <tr>
+                        <td style="padding-right: 10px; vertical-align: middle;">
+                            <img src="https://raw.githubusercontent.com/SergioPovoli/email_sign/main/Custodia-Forestale_reference.png"
+                                alt="Logo Custode Forestale" width="50" style="display: block; border: 0;">
+                        </td>
+                        <td style="vertical-align: middle;">
+                            <div style="margin-bottom: 2px;">
+                                <strong style="font-size: 13px; color: #000000;">
+                                    <span id="sig-custode-short-name">Nome</span> <span id="sig-custode-short-surname">Cognome</span>
+                                </strong>
+                            </div>
+                            <div style="color: #555555; font-size: 11px;">
+                                <span id="sig-custode-short-role" style="font-style: italic;">Ruolo</span>
+                            </div>
+                            <div id="sig-custode-short-phone"
+                                style="display: none; color: #333333; font-size: 10px; margin-top: 2px;">
+                                Tel: <span id="sig-custode-short-phone-number"></span>
+                            </div>
+                            <div style="margin-top: 4px; font-size: 10px;">
+                                <strong style="color: #000000;"><span id="sig-custode-short-service">Servizio Custodia Forestale</span></strong><br>
+                                <span id="sig-custode-short-location" style="font-size: 9px; color: #555555;">Valle dei Laghi (TN)</span>
+                            </div>
+                        </td>
+                    </tr>
+                </table>
+
+                <div id="sig-custode-short-privacy"
+                    style="display: none; margin-top: 15px; padding-top: 10px; border-top: 1px solid #cccccc; font-size: 8px; color: #666666; line-height: 1.3;">
+                    <strong>Informativa Privacy</strong><br>
+                    I dati contenuti nella presente e-mail sono raccolti e trattati nel rispetto del Regolamento UE
+                    2016/679 (GDPR). Gli interessati possono rivolgersi in qualsiasi momento al Titolare del
+                    trattamento per esercitare i diritti previsti dal GDPR.<br><br>
+                    Si precisa inoltre che le informazioni contenute nel presente messaggio, e negli eventuali allegati,
+                    sono riservate e per uso esclusivo del destinatario. In caso di ricezione dello stesso per errore,
+                    siete pregati di informare immediatamente il mittente e di cancellarlo dal vostro archivio, in
+                    conformità con quanto disposto dall'art. 17 del GDPR. Ogni trattamento della presente mail che non
+                    sia quello del destinatario reale è inteso come non autorizzato dal mittente. Inoltre, in quanto non
+                    destinatari reali, Vi informiamo che il mittente si oppone alla copia, la diffusione e la
+                    rivelazione anche parziale dei dati in esso contenuti alle persone non autorizzate dal medesimo, in
+                    virtù di quanto disposto dall'art. 21 del GDPR.
+                </div>
+            </div>
+
             <button class="btn" onclick="copySignature()">Copia Firma</button>
             <p id="copyMessage"
                 style="text-align: center; color: green; margin-top: 10px; opacity: 0; transition: opacity 0.5s;">Firma
@@ -528,6 +650,8 @@
 
 
     <script>
+        let currentEntity = 'comune'; // 'comune' o 'custode'
+
         function toggleInfoCard() {
             const content = document.getElementById('infoContent');
             const arrow = document.getElementById('infoArrow');
@@ -536,23 +660,75 @@
             arrow.classList.toggle('collapsed');
         }
 
+        function switchEntityType() {
+            const switchInput = document.getElementById('entityTypeSwitch');
+            const labelComune = document.getElementById('labelComune');
+            const labelCustode = document.getElementById('labelCustode');
+            const pageTitle = document.getElementById('pageTitle');
+            const formTitle = document.getElementById('formTitle');
+            const departmentGroup = document.getElementById('departmentGroup');
+            const serviceGroup = document.getElementById('serviceGroup');
+            const locationGroup = document.getElementById('locationGroup');
+            const departmentLabel = document.getElementById('departmentLabel');
+            const signatureTypeSwitch = document.getElementById('signatureTypeSwitch');
+
+            if (switchInput.checked) {
+                // Custode Forestale
+                currentEntity = 'custode';
+                labelComune.classList.remove('active');
+                labelCustode.classList.add('active');
+                pageTitle.textContent = 'Generatore Firma Email - Custode Forestale';
+                formTitle.textContent = 'Inserisci i tuoi dati - Custode Forestale';
+                departmentGroup.style.display = 'none';
+                serviceGroup.style.display = 'block';
+                locationGroup.style.display = 'block';
+            } else {
+                // Comune
+                currentEntity = 'comune';
+                labelComune.classList.add('active');
+                labelCustode.classList.remove('active');
+                pageTitle.textContent = 'Generatore Firma Email - Comune di Vallelaghi';
+                formTitle.textContent = 'Inserisci i tuoi dati';
+                departmentGroup.style.display = 'block';
+                serviceGroup.style.display = 'none';
+                locationGroup.style.display = 'none';
+            }
+            
+            // Forza l'aggiornamento della visualizzazione
+            switchSignatureType();
+        }
+
         function switchSignatureType() {
             const switchInput = document.getElementById('signatureTypeSwitch');
             const completePreview = document.getElementById('signaturePreview');
             const shortPreview = document.getElementById('signaturePreviewShort');
+            const custodePreview = document.getElementById('signaturePreviewCustode');
+            const custodeShortPreview = document.getElementById('signaturePreviewCustodeShort');
             const labelComplete = document.getElementById('labelComplete');
             const labelShort = document.getElementById('labelShort');
 
+            // Nascondi tutte le firme
+            completePreview.style.display = 'none';
+            shortPreview.style.display = 'none';
+            custodePreview.style.display = 'none';
+            custodeShortPreview.style.display = 'none';
+
             if (switchInput.checked) {
                 // Firma breve
-                completePreview.style.display = 'none';
-                shortPreview.style.display = 'block';
+                if (currentEntity === 'custode') {
+                    custodeShortPreview.style.display = 'block';
+                } else {
+                    shortPreview.style.display = 'block';
+                }
                 labelComplete.classList.remove('active');
                 labelShort.classList.add('active');
             } else {
                 // Firma completa
-                completePreview.style.display = 'block';
-                shortPreview.style.display = 'none';
+                if (currentEntity === 'custode') {
+                    custodePreview.style.display = 'block';
+                } else {
+                    completePreview.style.display = 'block';
+                }
                 labelComplete.classList.add('active');
                 labelShort.classList.remove('active');
             }
@@ -568,9 +744,13 @@
                 if (toggle.checked) {
                     sigElement.style.display = 'block';
                     document.getElementById('sig-short-privacy').style.display = 'block';
+                    document.getElementById('sig-custode-privacy').style.display = 'block';
+                    document.getElementById('sig-custode-short-privacy').style.display = 'block';
                 } else {
                     sigElement.style.display = 'none';
                     document.getElementById('sig-short-privacy').style.display = 'none';
+                    document.getElementById('sig-custode-privacy').style.display = 'none';
+                    document.getElementById('sig-custode-short-privacy').style.display = 'none';
                 }
             } else {
                 const input = document.getElementById(fieldName);
@@ -579,6 +759,11 @@
                     sigElement.style.display = 'inline';
                     if (fieldName === 'phone') {
                         document.getElementById('sig-short-phone').style.display = 'block';
+                        document.getElementById('sig-custode-phone').style.display = 'block';
+                        document.getElementById('sig-custode-short-phone').style.display = 'block';
+                    }
+                    if (fieldName === 'personalEmail' && currentEntity === 'custode') {
+                        document.getElementById('sig-custode-personalEmail').style.display = 'block';
                     }
                     updateSignature();
                 } else {
@@ -587,6 +772,11 @@
                     sigElement.style.display = 'none';
                     if (fieldName === 'phone') {
                         document.getElementById('sig-short-phone').style.display = 'none';
+                        document.getElementById('sig-custode-phone').style.display = 'none';
+                        document.getElementById('sig-custode-short-phone').style.display = 'none';
+                    }
+                    if (fieldName === 'personalEmail' && currentEntity === 'custode') {
+                        document.getElementById('sig-custode-personalEmail').style.display = 'none';
                     }
                 }
             }
@@ -596,50 +786,99 @@
             const name = document.getElementById('name').value || 'Nome';
             const surname = document.getElementById('surname').value || 'Cognome';
 
-            // Update complete signature
-            document.getElementById('sig-name').textContent = name;
-            document.getElementById('sig-surname').textContent = surname;
+            if (currentEntity === 'comune') {
+                // Update complete signature
+                document.getElementById('sig-name').textContent = name;
+                document.getElementById('sig-surname').textContent = surname;
 
-            // Update short signature
-            document.getElementById('sig-short-name').textContent = name;
-            document.getElementById('sig-short-surname').textContent = surname;
+                // Update short signature
+                document.getElementById('sig-short-name').textContent = name;
+                document.getElementById('sig-short-surname').textContent = surname;
 
-            // Update role if enabled
-            const roleToggle = document.getElementById('roleToggle');
-            if (roleToggle.checked) {
-                const role = document.getElementById('role').value || 'Ruolo';
-                document.getElementById('sig-role').textContent = role;
-                document.getElementById('sig-short-role').textContent = role;
-            }
+                // Update role if enabled
+                const roleToggle = document.getElementById('roleToggle');
+                if (roleToggle.checked) {
+                    const role = document.getElementById('role').value || 'Ruolo';
+                    document.getElementById('sig-role').textContent = role;
+                    document.getElementById('sig-short-role').textContent = role;
+                }
 
-            // Update department if enabled
-            const departmentToggle = document.getElementById('departmentToggle');
-            if (departmentToggle.checked) {
-                const department = document.getElementById('department').value || 'Ufficio / Deleghe / Altro';
-                document.getElementById('sig-department').textContent = department;
-            }
+                // Update department if enabled
+                const departmentToggle = document.getElementById('departmentToggle');
+                if (departmentToggle.checked) {
+                    const department = document.getElementById('department').value || 'Ufficio / Deleghe / Altro';
+                    document.getElementById('sig-department').textContent = department;
+                }
 
-            // Update phone if enabled
-            const phoneToggle = document.getElementById('phoneToggle');
-            if (phoneToggle.checked) {
-                const phone = document.getElementById('phone').value || '';
-                document.getElementById('sig-phone-number').textContent = phone;
-                document.getElementById('sig-short-phone-number').textContent = phone;
-            }
+                // Update phone if enabled
+                const phoneToggle = document.getElementById('phoneToggle');
+                if (phoneToggle.checked) {
+                    const phone = document.getElementById('phone').value || '';
+                    document.getElementById('sig-phone-number').textContent = phone;
+                    document.getElementById('sig-short-phone-number').textContent = phone;
+                }
 
-            // Update personal email if enabled
-            const personalEmailToggle = document.getElementById('personalEmailToggle');
-            if (personalEmailToggle.checked) {
-                const personalEmail = document.getElementById('personalEmail').value || '';
-                document.getElementById('sig-personalEmail-address').textContent = personalEmail;
+                // Update personal email if enabled
+                const personalEmailToggle = document.getElementById('personalEmailToggle');
+                if (personalEmailToggle.checked) {
+                    const personalEmail = document.getElementById('personalEmail').value || '';
+                    document.getElementById('sig-personalEmail-address').textContent = personalEmail;
+                }
+            } else {
+                // Update custode forestale signature (completa)
+                document.getElementById('sig-custode-name').textContent = name;
+                document.getElementById('sig-custode-surname').textContent = surname;
+
+                // Update custode forestale signature (breve)
+                document.getElementById('sig-custode-short-name').textContent = name;
+                document.getElementById('sig-custode-short-surname').textContent = surname;
+
+                // Update role
+                const roleToggle = document.getElementById('roleToggle');
+                if (roleToggle.checked) {
+                    const role = document.getElementById('role').value || 'Ruolo';
+                    document.getElementById('sig-custode-role').textContent = role;
+                    document.getElementById('sig-custode-short-role').textContent = role;
+                }
+
+                // Update service and location
+                const service = document.getElementById('service').value || 'Servizio Custodia Forestale';
+                const location = document.getElementById('location').value || 'Valle dei Laghi (TN)';
+                document.getElementById('sig-custode-service').textContent = service;
+                document.getElementById('sig-custode-location').textContent = location;
+                document.getElementById('sig-custode-short-service').textContent = service;
+                document.getElementById('sig-custode-short-location').textContent = location;
+
+                // Update phone if enabled
+                const phoneToggle = document.getElementById('phoneToggle');
+                if (phoneToggle.checked) {
+                    const phone = document.getElementById('phone').value || '';
+                    document.getElementById('sig-custode-phone-number').textContent = phone;
+                    document.getElementById('sig-custode-short-phone-number').textContent = phone;
+                }
+
+                // Update personal email if enabled
+                const personalEmailToggle = document.getElementById('personalEmailToggle');
+                if (personalEmailToggle.checked) {
+                    const personalEmail = document.getElementById('personalEmail').value || '';
+                    document.getElementById('sig-custode-personalEmail-address').textContent = personalEmail;
+                }
             }
         }
 
         async function copySignature() {
             const switchInput = document.getElementById('signatureTypeSwitch');
-            const signatureNode = switchInput.checked
-                ? document.getElementById('signaturePreviewShort')
-                : document.getElementById('signaturePreview');
+            let signatureNode;
+            
+            if (currentEntity === 'custode') {
+                signatureNode = switchInput.checked 
+                    ? document.getElementById('signaturePreviewCustodeShort')
+                    : document.getElementById('signaturePreviewCustode');
+            } else {
+                signatureNode = switchInput.checked
+                    ? document.getElementById('signaturePreviewShort')
+                    : document.getElementById('signaturePreview');
+            }
 
             try {
                 // Get the HTML content
@@ -689,6 +928,7 @@
         // Initialize with default values
         updateSignature();
         document.getElementById('labelComplete').classList.add('active');
+        document.getElementById('labelComune').classList.add('active');
     </script>
 </body>
 
